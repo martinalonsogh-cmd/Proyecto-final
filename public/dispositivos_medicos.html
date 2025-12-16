@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestión de Dispositivos Médicos</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div id="navbar"></div>
+
+<div class="container my-4">
+  <h1 class="mb-3">Gestión de Dispositivos Médicos</h1>
+
+  <button onclick="window.location.href='/descarga_dispositivos_medicos'" 
+          class="btn btn-success btn-sm mb-4">
+    Descargar Dispositivos Médicos
+  </button>
+
+  <input id="searchInput" type="text" class="form-control form-control-lg mb-3"
+         placeholder="Buscar dispositivos médicos...">
+
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Categoría</th>
+          <th>Estado</th>
+          <th>Ubicación</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="resultsTable"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+let tipoUsuario = null;
+
+// Cargar dispositivos médicos
+async function loadDispositivos(query = '') {
+  const res = await fetch(`/api/dispositivos/buscar?q=${encodeURIComponent(query)}`);
+  const data = await res.json();
+
+  const tbody = document.getElementById("resultsTable");
+  tbody.innerHTML = "";
+
+  data.forEach(dev => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${dev.id}</td>
+      <td>${dev.nombre}</td>
+      <td>${dev.categoria}</td>
+      <td>${dev.estado}</td>
+      <td>${dev.ubicacion}</td>
+      <td class="text-center">
+        ${
+          tipoUsuario === 'ADMIN'
+            ? `
+              <button onclick="cambiarEstado(${dev.id})" class="btn btn-warning btn-sm">
+                Cambiar Estado
+              </button>
+              <button onclick="deleteDispositivo(${dev.id})" class="btn btn-danger btn-sm ms-2">
+                Eliminar
+              </button>
+            `
+            : `<span class="text-muted">Sin permisos</span>`
+        }
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+document.getElementById("searchInput").addEventListener("input", e => {
+  loadDispositivos(e.target.value);
+});
+
+async function deleteDispositivo(id) {
+  if (!confirm("¿Confirmas eliminar este dispositivo médico?")) return;
+
+  const res = await fetch(`/api/dispositivos_medicos/${id}`, {
+    method: "DELETE"
+  });
+
+  if (res.ok) loadDispositivos();
+}
+
+async function cambiarEstado(id) {
+  const nuevoEstado = prompt(
+    "Ingrese el nuevo estado:\nDISPONIBLE\nMANTENIMIENTO\nEN PRUEBAS"
+  );
+
+  if (!nuevoEstado) return;
+
+  const res = await fetch(`/api/dispositivos_medicos/${id}/estado`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nuevo_estado: nuevoEstado })
+  });
+
+  if (res.ok) {
+    alert("Estado actualizado correctamente");
+    loadDispositivos();
+  } else {
+    alert("Error al actualizar el estado");
+  }
+}
+
+fetch("/tipo-usuario")
+  .then(r => r.json())
+  .then(data => {
+    tipoUsuario = data.tipo_usuario;
+    loadDispositivos();
+  });
+
+fetch("/navbar.html")
+  .then(r => r.text())
+  .then(html => {
+    document.getElementById("navbar").innerHTML = html;
+  });
+</script>
+
+<button onclick="window.location.href='/'">Volver</button>
+
+</body>
+</html>

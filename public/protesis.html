@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestión de Instrumentos</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div id="navbar"></div>
+
+<div class="container my-4">
+  <h1 class="mb-3">Gestión de Protesis</h1>
+
+  <!-- Descargar Excel -->
+  <button onclick="window.location.href='/descarga_instrumentos'" class="btn btn-success btn-sm mb-4">
+    Descargar Instrumentos
+  </button>
+
+  <!-- Busqueda -->
+  <input id="searchInput" type="text" class="form-control form-control-lg mb-3" 
+         placeholder="Buscar instrumentos...">
+
+  <!-- Tabla -->
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Categoría</th>
+          <th>Estado</th>
+          <th>Ubicación</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="resultsTable"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+let tipoUsuario = null;
+
+/* === SOLO ESTO SE AGREGA === */
+function estadoTexto(estado) {
+  switch (estado) {
+    case 1:
+    case '1': return 'Disponible';
+    case 2:
+    case '2': return 'Mantenimiento';
+    case 3:
+    case '3': return 'En pruebas';
+    default: return estado;
+  }
+}
+
+// Cargar instrumentos
+async function loadInstrumentos(query='') {
+  const res = await fetch(`/api/instrumentos/buscar?q=${encodeURIComponent(query)}`);
+  const data = await res.json();
+  const tbody = document.getElementById("resultsTable");
+  tbody.innerHTML = "";
+
+  data.forEach(instr => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${instr.id}</td>
+      <td>${instr.nombre}</td>
+      <td>${instr.categoria}</td>
+      <td>${estadoTexto(instr.estado)}</td>
+      <td>${instr.ubicacion}</td>
+      <td class="text-center">
+        ${
+          tipoUsuario === 'ADMIN'
+            ? `
+              <button onclick="cambiarEstado(${instr.id})" class="btn btn-warning btn-sm">Cambiar Estado</button>
+              <button onclick="deleteInstrumento(${instr.id})" class="btn btn-danger btn-sm ms-2">Eliminar</button>
+            `
+            : `<span class='text-muted'>Sin permisos</span>`
+        }
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// Búsqueda en vivo
+document.getElementById("searchInput").addEventListener("input",(e)=>{
+  loadInstrumentos(e.target.value);
+});
+
+// Eliminar instrumento
+async function deleteInstrumento(id){
+  if (!confirm("¿Confirmas eliminar este instrumento?")) return;
+  const res = await fetch(`/api/instrumentos/${id}`,{method:"DELETE"});
+  if(res.ok) loadInstrumentos();
+}
+
+// Cambiar estado
+async function cambiarEstado(id){
+  const nuevoEstado = prompt(
+    "Ingrese el nuevo estado:\n1 = Disponible\n2 = Mantenimiento\n3 = En pruebas"
+  );
+
+  if (!nuevoEstado) return;
+
+  const res = await fetch(`/api/instrumentos/${id}/estado`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nuevo_estado: nuevoEstado })
+  });
+
+  if(res.ok){
+    alert("Estado actualizado correctamente");
+    loadInstrumentos();
+  } else {
+    alert("Error al actualizar el estado");
+  }
+}
+
+// Cargar navbar y detectar rol
+fetch("/tipo-usuario")
+.then(r=>r.json())
+.then(data=>{
+  tipoUsuario = data.tipo_usuario;
+  loadInstrumentos();
+});
+
+// Cargar navbar (SIN modificar el menú)
+fetch("/navbar.html")
+  .then(r=>r.text())
+  .then(html=>{
+    document.getElementById("navbar").innerHTML = html;
+  });
+</script>
+
+<button onclick="window.location.href='/'">Volver</button>
+</body>
+</html>

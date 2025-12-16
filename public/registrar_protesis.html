@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Prótesis</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!-- HEADER CON LOGO -->
+<header class="header">
+  <div class="header-content">
+    <img src="/img/medtronic.png" alt="Medtronic" class="logo">
+  </div>
+</header>
+
+<!-- MENÚ -->
+<nav>
+  <ul>
+    <li><a href="/index.html">Inicio</a></li>
+    <li><a href="/registrar_protesis.html">Registrar Prótesis</a></li>
+    <li><a href="/registrar_dispositivo.html">Registrar Dispositivo</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+
+  <h2>Registro de Prótesis</h2>
+
+  <form action="/subir_instrumento" method="POST">
+
+    <label for="nombre_instrumento">Nombre de la prótesis:</label>
+    <input type="text" id="nombre_instrumento" name="nombre_instrumento" required>
+
+    <label for="categoria_instrumento">Tipo de prótesis:</label>
+    <input type="text" id="categoria_instrumento" name="categoria_instrumento" required>
+
+    <label for="estado_protesis">Estado de la prótesis:</label>
+    <select id="estado_protesis" name="estado_instrumento" required>
+      <option value="">Seleccione un estado</option>
+      <option value="1">DISPONIBLE</option>
+      <option value="2">ASIGNADA</option>
+      <option value="3">MANTENIMIENTO</option>
+    </select>
+
+    <label for="ubicacion_instrumento">Ubicación / Almacén:</label>
+    <input type="text" id="ubicacion_instrumento" name="ubicacion_instrumento">
+
+    <button type="submit">Guardar prótesis</button>
+  </form>
+
+  <form action="/cargar_instrumento" method="POST" enctype="multipart/form-data">
+    <label>Subir archivo Excel (.xlsx) de prótesis:</label>
+    <input type="file" name="excelFile" accept=".xlsx" required>
+    <button type="submit">Cargar prótesis</button>
+  </form>
+
+</div>
+
+</body>
+</html>

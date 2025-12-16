@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Medtronic | Inicio</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    
+    <nav id="menu"></nav>
+
+<script>
+fetch('/menu')
+  .then(res => res.json())
+  .then(items => {
+    const nav = document.getElementById('menu');
+    const ul = document.createElement('ul');
+
+    items.forEach(item => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = item.url;
+      a.textContent = item.nombre;
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+
+    nav.appendChild(ul);
+  });
+</script>
+
+
+<!-- HEADER CON LOGO -->
+<header class="header">
+  <div class="header-content">
+    <img src="/img/medtronic.png" alt="Medtronic Logo" class="logo">
+    <h1>Sistema almacenamiento</h1>
+  </div>
+</header>
+
+<!-- CONTENIDO PRINCIPAL -->
+<main class="container">
+
+  <!-- SECCIÓN INFORMACIÓN -->
+  <section class="info">
+    <h2>Sobre Medtronic</h2>
+    <p>
+      Medtronic es una empresa líder en tecnología médica dedicada a mejorar
+      la vida de los pacientes a través de soluciones innovadoras y dispositivos
+      médicos de alta calidad.
+    </p>
+  </section>
+
+  <!-- SECCIÓN CONTACTO -->
+  <section class="info">
+    <h2>Contacto</h2>
+    <p><strong>Correo:</strong> csd.medtronicmexico@medtronic.com</p>
+    <p><strong>Teléfono:</strong> +52 52 664 903 1100</p>
+  </section>
+
+  <!-- SECCIÓN UBICACIONES -->
+  <section class="ubicaciones">
+    <h2>Ubicaciones</h2>
+
+    <div class="ubicaciones-grid">
+
+      <div class="ubicacion-card">
+        <img src="/img/medtronicotay.png" alt="Almacén">
+        <h3>El Lago</h3>
+        <p>Instalacion de la planta Medtronic en El Lago.</p>
+      </div>
+
+      <div class="ubicacion-card">
+        <img src="/img/medtroniclago.jpg" alt="Almacen">
+        <h3>Otay</h3>
+        <p>Instalacion de la planta Medtronic en Otay.</p>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+</body>
+
+</html>
+

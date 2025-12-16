@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registrar Dispositivo Médico</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!-- MENÚ (no desaparece) -->
+<nav>
+  <ul id="menu"></ul>
+</nav>
+
+<div class="container">
+
+  <h2>Registrar Dispositivo Médico</h2>
+
+  <form action="/subir_dispositivo" method="POST">
+
+    <label>Nombre</label>
+    <input type="text" name="nombre" required>
+
+    <label>Categoría</label>
+    <input type="text" name="categoria" required>
+
+    <label>Estado</label>
+    <select name="estado" required>
+      <option value="DISPONIBLE">DISPONIBLE</option>
+      <option value="MANTENIMIENTO">MANTENIMIENTO</option>
+      <option value="EN PRUEBAS">EN PRUEBAS</option>
+    </select>
+
+    <label>Ubicación</label>
+    <input type="text" name="ubicacion" required>
+
+    <button type="submit">Registrar</button>
+  </form>
+
+</div>
+
+<script>
+fetch('/menu')
+  .then(res => res.json())
+  .then(data => {
+    const ul = document.getElementById('menu');
+    data.forEach(item => {
+      const li = document.createElement('li');
+      li.innerHTML = `<a href="${item.url}">${item.nombre}</a>`;
+      ul.appendChild(li);
+    });
+  });
+</script>
+
+</body>
+</html>
