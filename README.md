@@ -59,6 +59,7 @@ El sistema implementa **roles de usuario** para asegurar que cada persona tenga 
 - JavaScript
 
 ## Estructura del proyecto
+```
 ├── node_modules
 │
 ├── public
@@ -85,4 +86,4 @@ El sistema implementa **roles de usuario** para asegurar que cada persona tenga 
 ├── package-lock.json
 ├── server.js
 └── README.md
-
+```
