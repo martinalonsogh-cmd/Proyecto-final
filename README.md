@@ -59,4 +59,30 @@ El sistema implementa **roles de usuario** para asegurar que cada persona tenga 
 - JavaScript
 
 ## Estructura del proyecto
+├── node_modules
+│
+├── public
+│   ├── img
+│   │   ├── medtronic.png
+│   │   ├── medtroniclago.jpg
+│   │   └── medtronicotay.png
+│   │
+│   ├── dispositivos_medicos.html
+│   ├── index.html
+│   ├── login.html
+│   ├── navbar.html
+│   ├── protesis.html
+│   ├── registrar_dispositivo.html
+│   ├── registrar_protesis.html
+│   ├── registro.html
+│   └── styles.css
+│
+├── uploads
+│
+├── .env
+├── nodemon.json
+├── package.json
+├── package-lock.json
+├── server.js
+└── README.md
 
