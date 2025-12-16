@@ -87,3 +87,16 @@ El sistema implementa **roles de usuario** para asegurar que cada persona tenga 
 ├── server.js
 └── README.md
 ```
+La base de datos está diseñada para manejar:
+- Usuarios con roles (ADMIN, ASISTENTE, AUDITOR)
+- Códigos de acceso
+- Instrumentos (prótesis)
+- Dispositivos médicos
+
+Incluye control de relaciones y validaciones para asegurar la integridad de la información.
+
+## Conclusión
+
+Este sistema permite mejorar el control y la organización de los almacenes de Medtronic en Tijuana, facilitando la gestión del inventario médico, reduciendo errores y apoyando los procesos de auditoría y toma de decisiones dentro de la empresa.
+
+El proyecto demuestra la aplicación práctica de bases de datos y desarrollo web en un entorno real del sector salud.
